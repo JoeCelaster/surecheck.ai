@@ -11,9 +11,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
 
-    "strict": true,
-
-    "ignoreDeprecations": "6.0"
+    "strict": true
   },
   "include": ["apps/**/*", "packages/**/*"]
 }

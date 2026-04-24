@@ -7,11 +7,13 @@ export default function AdminPage() {
   const [files, setFiles] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [recommendationLoading, setRecommendationLoading] = useState(false);
+  const [recommendationMessage, setRecommendationMessage] = useState("");
 
   // 🔥 Fetch uploaded files
   const fetchFiles = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/policy/files");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/policy/files`);
       const data = await res.json();
       setFiles(data.files || []);
     } catch {
@@ -36,7 +38,7 @@ export default function AdminPage() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:5000/api/policy/upload", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/policy/upload`, {
         method: "POST",
         body: formData,
       });
@@ -58,7 +60,7 @@ export default function AdminPage() {
   const handleDelete = async (fileId: string) => {
     try {
       await fetch(
-        `http://localhost:5000/api/policy/delete/${fileId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/policy/delete/${fileId}`,
         { method: "DELETE" }
       );
 
@@ -68,8 +70,51 @@ export default function AdminPage() {
     }
   };
 
+  const handleCheckUpdatedResults = async () => {
+    setRecommendationLoading(true);
+    setRecommendationMessage("");
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/policy/recommend`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: "Update recommendations with latest policy data",
+          userProfile: {
+            fullName: "Admin Test",
+            age: "30",
+            lifestyle: "Moderate",
+            conditions: ["None"],
+            income: "8-15L",
+            city: "Metro"
+          },
+          forceUpdate: true
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setRecommendationMessage("✅ Recommendations updated! Redirecting...");
+        
+        // Store the recommendation data in sessionStorage to use on recommend page
+        sessionStorage.setItem('adminRecommendation', JSON.stringify(data));
+        
+        // Redirect to recommend page after a short delay
+        setTimeout(() => {
+          window.location.href = '/recommend';
+        }, 1500);
+      } else {
+        setRecommendationMessage("❌ Failed to update recommendations");
+      }
+    } catch (err) {
+      setRecommendationMessage("❌ Server error while updating recommendations");
+    } finally {
+      setRecommendationLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 p-10">
+    <div className="min-h-screen text-black bg-gray-50 p-10">
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow">
 
         <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
@@ -94,7 +139,7 @@ export default function AdminPage() {
         </div>
 
         {/* File List */}
-        <div>
+        <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Uploaded Policies</h2>
 
           {files.length === 0 && (
@@ -116,6 +161,26 @@ export default function AdminPage() {
               </button>
             </div>
           ))}
+        </div>
+
+        {/* Update Recommendations Section */}
+        <div className="border-t pt-6">
+          <h2 className="text-lg font-semibold mb-3">Update Recommendations</h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Check for updated recommendation results using the latest uploaded policy data
+          </p>
+          
+          <button
+            onClick={handleCheckUpdatedResults}
+            disabled={recommendationLoading}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {recommendationLoading ? "Updating..." : "Check for updated results"}
+          </button>
+          
+          {recommendationMessage && (
+            <p className="mt-2 text-sm">{recommendationMessage}</p>
+          )}
         </div>
 
       </div>
