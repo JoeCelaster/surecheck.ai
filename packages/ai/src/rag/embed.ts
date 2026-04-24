@@ -14,6 +14,7 @@ export const getEmbeddingModel = async () => {
 };
 
 export const embedDocuments = async (docs: any[]) => {
+    console.log("Docs received:", docs?.length);
   const model = await getEmbeddingModel();
 
   const vectors = [];
@@ -29,6 +30,7 @@ export const embedDocuments = async (docs: any[]) => {
       embedding: Array.from(output.data),
     });
   }
+  console.log("Returning vectors:", vectors.length);
 
   return vectors;
 };

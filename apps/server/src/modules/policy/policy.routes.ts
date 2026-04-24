@@ -3,6 +3,8 @@ import multer from "multer";
 import path from "path";
 import { uploadPolicy } from "./policy.controller";
 import { retrieveChunks } from "../../../../../packages/ai/src/rag/retrieve";
+import { listFiles, deleteVectorsByFile } from "../../../../../packages/ai/src/rag/vectorStore";
+
 
 const router = Router();
 
@@ -36,6 +38,24 @@ router.get("/search", async (req, res) => {
   const results = await retrieveChunks(query);
 
   res.json(results);
+});
+router.get("/files", (req, res) => {
+  const files = listFiles();
+
+  res.json({
+    files,
+  });
+});
+router.delete("/delete/:fileId", (req, res) => {
+  const { fileId } = req.params;
+
+  console.log("🔥 DELETE API HIT:", fileId); // ADD THIS
+
+  deleteVectorsByFile(fileId);
+
+  res.json({
+    message: "Deleted",
+  });
 });
 
 export default router;
