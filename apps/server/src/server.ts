@@ -1,10 +1,20 @@
-import dotenv from "dotenv";
-import app from "./app";
+import express from "express";
+import cors from "cors";
+import policyRoutes from "./modules/policy/policy.routes";
+import { initDefaultData } from "../../../packages/ai/src/initDefaultData";
 
-dotenv.config();
+const app = express();
 
-const PORT = process.env.PORT || 5000;
+app.use(cors());
+app.use(express.json());
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+app.use("/api/policy", policyRoutes);
+
+// 🔥 IMPORTANT: load default data before server starts
+(async () => {
+  await initDefaultData();
+
+  app.listen(5000, () => {
+    console.log("🚀 Server running on http://localhost:5000");
+  });
+})();

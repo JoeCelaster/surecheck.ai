@@ -1,116 +1,138 @@
-# AI Health Insurance Advisor — PRD
+# 📘 Product Requirements Document (PRD)
 
-## 1. Target User & Pain Points
-
-### Target User
-A first-time health insurance buyer who:
-- Has limited understanding of insurance terms
-- May have a pre-existing condition
-- Wants a safe and affordable policy
-
-### Pain Points
-- Overwhelmed by too many policy options
-- Confused by jargon (waiting period, co-pay, exclusions)
-- Cannot understand what applies to their personal health condition
-- Fear of hidden costs or claim rejection
+## Product: surecheck.ai
 
 ---
 
-## 2. Feature Prioritisation
+## 🎯 Objective
 
-### 1. AI Recommendation Engine (Highest Priority)
-Reason:
-Core value of the product. Users need clear, personalised policy suggestions.
-
-Includes:
-- Best-fit policy recommendation
-- Comparison with 2–3 alternatives
-- Clear explanation (why this policy)
+Build an AI-powered system that helps users select the most suitable health insurance policy based on their profile, using **real policy documents instead of model assumptions**.
 
 ---
 
-### 2. Chat-Based Policy Explainer
-Reason:
-Users need to understand complex terms after seeing recommendations.
+## 👥 Target Users
 
-Includes:
-- Definition of terms (e.g., waiting period)
-- Personalised examples based on user profile
-- Follow-up Q&A
+* Individuals buying health insurance for the first time
+* Users with pre-existing conditions
+* Price-sensitive users comparing policies
 
 ---
 
-### 3. Admin Panel (Knowledge Base)
-Reason:
-Allows updating policy data without changing code.
+## ❗ Problem Statement
 
-Includes:
-- Upload policy documents
-- View document list
-- Edit metadata (policy name, insurer)
-- Delete documents (removes from vector DB)
+Users struggle with:
 
----
-
-## 3. Recommendation Logic
-
-The system matches user profile to policies using AI + document retrieval (RAG).
-
-### Inputs (6 Fields)
-- Age
-- Lifestyle
-- Pre-existing conditions
-- Income
-- City tier
-- Name (for personalisation)
+* Complex insurance terminology
+* Hidden exclusions
+* Comparing multiple policies
+* Understanding waiting periods
 
 ---
 
-### Matching Approach
+## 💡 Solution
 
-1. **Retrieve Relevant Policies**
-   - Use user profile to query vector database
-   - Fetch policy chunks from uploaded documents
+A system that:
 
-2. **Evaluate Key Factors**
-
-| Factor | Logic |
-|-------|------|
-| Age | Higher age → prefer lower waiting period |
-| Pre-existing conditions | Match exclusions and waiting periods |
-| Income | Filter policies within affordable premium range |
-| Lifestyle | Adjust risk (active users may benefit from OPD coverage) |
-| City tier | Prefer policies with better hospital network |
+* Collects user profile data
+* Retrieves relevant policy information
+* Generates structured, explainable recommendations
 
 ---
 
-3. **Generate Recommendation**
+## 🧩 Core Features
 
-AI uses:
-- Retrieved policy data (RAG)
-- User profile
+### 1. Profile Input (Strict 6 Fields)
 
-Output includes:
-- Comparison table (2–3 policies)
-- Coverage details (from documents)
-- Explanation (150–250 words referencing user profile)
-
----
-
-## 4. Assumptions
-
-- Policy documents contain accurate and sufficient data for comparison
-- Users prefer fewer, high-quality recommendations over many options
-- Users do not understand insurance jargon and need explanations
-- Pre-existing conditions strongly influence policy suitability
-- Income determines affordability and coverage expectations
-- AI responses must always be grounded in retrieved documents (no hallucination)
+* Full Name
+* Age
+* Lifestyle
+* Pre-existing Conditions
+* Income Band
+* City Tier
 
 ---
 
-## 5. Product Principles
+### 2. AI Recommendation Engine
 
-- Clarity over quantity
-- Explanation over raw data
-- Personalisation over generic output
-- Grounded responses using real policy documents
+#### Requirements:
+
+* Must use RAG (no hallucination)
+* Must use retrieved document chunks
+* Must generate 3 structured sections
+
+---
+
+### 3. Output Format
+
+#### A. Peer Comparison Table
+
+* Minimum 2 policies
+* All fields from document
+* No placeholder values
+
+---
+
+#### B. Coverage Details
+
+* Must be document-grounded
+* Must not use model assumptions
+
+---
+
+#### C. Why This Policy
+
+* Personalized reasoning
+* Must reference ≥ 3 user fields
+
+---
+
+### 4. Admin Panel
+
+* Upload policy documents
+* Delete policies
+* Manage knowledge base
+
+---
+
+## 🧠 AI Requirements
+
+* Custom retrieval tool
+* Grounded responses only
+* Session-aware context
+* Guardrail: no medical advice
+
+---
+
+## ⚙️ Non-Functional Requirements
+
+* Fast response (<2s)
+* Clean UI
+* No hardcoded data
+* Easy setup
+
+---
+
+## 📊 Success Criteria
+
+* Accurate policy extraction
+* Fully grounded responses
+* Clean structured output
+* No hallucinated data
+
+---
+
+## 🚧 Future Scope
+
+* Chat-based explainer
+* Policy scoring engine
+* Real insurer integrations
+* Mobile app
+
+---
+
+## 🏁 Summary
+
+Asurecheck.ai transforms insurance decision-making from:
+❌ Confusing & opaque
+to
+✅ Transparent, explainable, and personalized

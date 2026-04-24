@@ -31,8 +31,8 @@ export const retrieveChunks = async (query: string, topK = 5) => {
   const scored = vectors.map((v) => ({
     content: v.content,
     score: cosineSimilarity(queryEmbedding, v.embedding),
-    }));
-    console.log("Total vectors:", getVectors().length);
+  }));
+  console.log("Total vectors:", getVectors().length);
 
   scored.sort((a, b) => b.score - a.score);
 

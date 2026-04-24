@@ -4,7 +4,7 @@ import path from "path";
 import { uploadPolicy } from "./policy.controller";
 import { retrieveChunks } from "../../../../../packages/ai/src/rag/retrieve";
 import { listFiles, deleteVectorsByFile } from "../../../../../packages/ai/src/rag/vectorStore";
-
+import { runStructuredAgent } from "../../../../../packages/ai/src/agent/agent";
 
 const router = Router();
 
@@ -56,6 +56,21 @@ router.delete("/delete/:fileId", (req, res) => {
   res.json({
     message: "Deleted",
   });
+});
+
+router.post("/recommend", async (req, res) => {
+  try {
+    console.log("🔥 /recommend HIT");
+
+    const { query, userProfile } = req.body;
+
+    const result = await runStructuredAgent(query, userProfile);
+
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed recommendation" });
+  }
 });
 
 export default router;
