@@ -11,7 +11,7 @@ export default function AdminPage() {
   // 🔥 Fetch uploaded files
   const fetchFiles = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/policy/files");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/policy/files`);
       const data = await res.json();
       setFiles(data.files || []);
     } catch {
@@ -36,7 +36,7 @@ export default function AdminPage() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:5000/api/policy/upload", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/policy/upload`, {
         method: "POST",
         body: formData,
       });
@@ -58,7 +58,7 @@ export default function AdminPage() {
   const handleDelete = async (fileId: string) => {
     try {
       await fetch(
-        `http://localhost:5000/api/policy/delete/${fileId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/policy/delete/${fileId}`,
         { method: "DELETE" }
       );
 
@@ -69,7 +69,7 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-10">
+    <div className="min-h-screen text-black bg-gray-50 p-10">
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow">
 
         <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
