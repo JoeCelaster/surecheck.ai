@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function RecommendPage() {
   const [form, setForm] = useState({
@@ -34,6 +34,22 @@ export default function RecommendPage() {
       };
     });
   };
+
+  useEffect(() => {
+    // Check if there's admin recommendation data
+    const adminRecommendation = sessionStorage.getItem('adminRecommendation');
+    if (adminRecommendation) {
+      try {
+        const data = JSON.parse(adminRecommendation);
+        setResult(data);
+        setShowChat(true);
+        // Clear the stored data after using it
+        sessionStorage.removeItem('adminRecommendation');
+      } catch (err) {
+        console.error('Failed to parse admin recommendation:', err);
+      }
+    }
+  }, []);
 
   const handleSubmit = async () => {
     setLoading(true);
